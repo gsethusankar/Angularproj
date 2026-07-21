@@ -32,9 +32,7 @@ export class MoviesComponent implements OnInit {
     let id = event.target.id.substr("warn_".length);
     let movie = this.findMovie(id);
     console.log("movie.warnAt: " + movie.warnAt);
-    setTimeout(
-      "alert('Hey! You asked us to remind you about your movie: " + movie.title + "');", 
-      movie.warnAt*1000);
+    setTimeout(() => { alert(`alert('Hey! You asked us to remind you about your movie: ${movie.title}');`); }, movie.warnAt*1000);
   }
 
   private findMovie(id: String){
