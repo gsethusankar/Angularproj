@@ -15,12 +15,12 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {path: 'register', component: RegistrationComponent},
-  {path: 'home', component: HomeComponent},
+  {path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   {path: 'users', component: UsersComponent, canActivate: [AuthGuard]},
-  {path: 'messages', component: MessagesComponent},
-  {path: 'movies', component: MoviesComponent},
-  {path: 'newmovie', component: NewmovieComponent},
-  {path: 'profile', component: ProfileComponent}
+  {path: 'messages', component: MessagesComponent, canActivate: [AuthGuard] },
+  {path: 'movies', component: MoviesComponent, canActivate: [AuthGuard] },
+  {path: 'newmovie', component: NewmovieComponent, canActivate: [AuthGuard] },
+  {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({
