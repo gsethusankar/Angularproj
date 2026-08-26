@@ -40,7 +40,7 @@ export class AuthenticationService {
               if (user) {
                   console.log('aut succesffull')
                   // store user details in local storage to keep user logged in between page refreshes
-                  localStorage.setItem('currentUser', JSON.stringify(user));
+                  // localStorage.setItem('currentUser', JSON.stringify(user)); // FIXED: use BehaviorSubject / HttpOnly cookie
                   this.currentUserSubject.next(user);
               }
 
