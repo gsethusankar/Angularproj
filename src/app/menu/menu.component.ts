@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 import { AuthGuard } from '../AuthGuard';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { User } from '../model/user';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-menu',
@@ -10,6 +12,8 @@ import { User } from '../model/user';
   styleUrls: ['./menu.component.css']
 })
 export class MenuComponent implements OnInit {
+  private destroy$ = new Subject<void>();
+
 
   currentUser: User;
 
@@ -17,7 +21,7 @@ export class MenuComponent implements OnInit {
     authGuard: AuthGuard,
     private router: Router,
     private authenticationService: AuthenticationService) {
-    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+    this.authenticationService.currentUser.pipe(takeUntil(this.destroy$)).subscribe(x => this.currentUser = x);
 
   }
 
@@ -31,4 +35,9 @@ export class MenuComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
