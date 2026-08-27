@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 import { MovieService } from './movie.service';
 import { Movie } from '../model/movie';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-movies',
@@ -8,6 +10,8 @@ import { Movie } from '../model/movie';
   styleUrls: ['./movies.component.css']
 })
 export class MoviesComponent implements OnInit {
+  private destroy$ = new Subject<void>();
+
 
   movies: Movie[];
 
@@ -16,7 +20,7 @@ export class MoviesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.movieService.getMovies().subscribe(
+    this.movieService.getMovies().pipe(takeUntil(this.destroy$)).subscribe(
       ms => {
         this.movies = ms;
         this.movies.forEach(movie => {
@@ -39,4 +43,9 @@ export class MoviesComponent implements OnInit {
     return this.movies.find(m => m.id === id);
   }
 
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
