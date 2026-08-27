@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AlertService {
+  private destroy$ = new Subject<void>();
+
     private subject = new Subject<any>();
     private keepAfterNavigationChange = false;
 
     constructor(private router: Router) {
         // clear alert message on route change
-        router.events.subscribe(event => {
+        router.events.pipe(takeUntil(this.destroy$)).subscribe(event => {
             if (event instanceof NavigationStart) {
                 if (this.keepAfterNavigationChange) {
                     // only keep for a single location change
@@ -35,4 +38,9 @@ export class AlertService {
     getMessage(): Observable<any> {
         return this.subject.asObservable();
     }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
